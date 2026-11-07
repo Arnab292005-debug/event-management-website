@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EventSphere — Discover, Connect & Experience</title>
+  
+  <!-- Google Fonts & Tailwind CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons & Lucide Icons via CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            accent: {
+              500: '#ec4899',
+              600: '#db2777',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.25s ease-out forwards',
+            'bounce-subtle': 'bounceSubtle 2s infinite ease-in-out',
+            'pulse-glow': 'pulseGlow 2.5s infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            bounceSubtle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.8' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #818cf8;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6366f1;
+    }
+    .glass-card {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #ticketModal, #ticketModal * {
+        visibility: visible;
+      }
+      #ticketModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-bolt-lightning text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">EventSphere</span>
+          <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 ml-2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800">2026 Live</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#events-section" class="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Browse Events</a>
+        <a href="#featured-speaker" class="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Featured</a>
+        <a href="#faq" class="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</a>
+        <button id="myTicketsBtn" class="flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="fa-solid fa-ticket text-indigo-500"></i>
+          <span>My Tickets</span>
+          <span id="ticketCountBadge" class="bg-indigo-600 text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+        </button>
+      </nav>
+
+      <!-- Action Utilities -->
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" aria-label="Toggle Theme" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+        </button>
+
+        <!-- CTA Register -->
+        <a href="#events-section" class="hidden sm:inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 shadow-md shadow-indigo-600/20 hover:shadow-indigo-600/30 transition-all active:scale-[0.98]">
+          <i class="fa-solid fa-calendar-check text-xs"></i>
+          <span>Book Tickets</span>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobileMenuBtn" aria-label="Open Mobile Menu" class="md:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-6 space-y-3">
+      <a href="#events-section" class="mobile-nav-link block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Browse Events</a>
+      <a href="#featured-speaker" class="mobile-nav-link block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Keynote Highlight</a>
+      <a href="#faq" class="mobile-nav-link block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800">FAQ</a>
+      <button id="mobileMyTicketsBtn" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-ticket text-indigo-500"></i> My Registered Passes</span>
+        <span id="mobileTicketBadge" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="relative overflow-hidden pt-12 pb-16 lg:pt-20 lg:pb-24 border-b border-slate-200/60 dark:border-slate-800/60">
+    <!-- Ambient Background Gradients -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-indigo-500/20 via-pink-500/15 to-purple-500/10 blur-[100px] rounded-full pointer-events-none -z-10 animate-pulse-glow"></div>
+    <div class="absolute -top-20 -right-20 w-80 h-80 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none -z-10"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <!-- Hero Text -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-900 bg-indigo-50/80 dark:bg-indigo-950/60 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>Over 25,000+ Experiences Booked Worldwide</span>
+          </div>
+          
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
+            Discover, Experience & Host 
+            <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">Unforgettable</span> Events.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+            Your single portal to top-tier developer summits, electrifying concerts, esports tournaments, and executive masterclasses. Reserve seats in seconds with instant verified digital passes.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#events-section" class="px-6 py-3.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/45 transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+              <span>Explore All Events</span>
+            </a>
+            <button onclick="openRegisterModal()" class="px-6 py-3.5 rounded-xl font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm flex items-center gap-2">
+              <i class="fa-solid fa-ticket-simple text-indigo-500"></i>
+              <span>Quick Register</span>
+            </button>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="pt-6 grid grid-cols-3 gap-4 border-t border-slate-200/80 dark:border-slate-800/80 max-w-lg mx-auto lg:mx-0">
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">120+</p>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Curated Events</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">45k+</p>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Active Attendees</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">99.8%</p>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Satisfaction Rate</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Headline Event Countdown Card -->
+        <div class="lg:col-span-5">
+          <div class="relative rounded-3xl p-6 sm:p-7 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xl glass-card">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex h-2.5 w-2.5 rounded-full bg-pink-500"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400">Next Flagship Summit</span>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-semibold border border-indigo-100 dark:border-indigo-900">Nov 18, 2026</span>
+            </div>
+
+            <div class="mt-4">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">Global AI & Cloud Architect Conclave</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-location-dot text-indigo-500"></i>
+                Silicon Valley Convention Center & Virtual
+              </p>
+            </div>
+
+            <!-- Countdown Timer Blocks -->
+            <div class="mt-6 grid grid-cols-4 gap-2.5 text-center">
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                <span id="timerDays" class="block text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400">14</span>
+                <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Days</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                <span id="timerHours" class="block text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400">08</span>
+                <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hours</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                <span id="timerMinutes" class="block text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400">42</span>
+                <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mins</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                <span id="timerSeconds" class="block text-2xl sm:text-3xl font-black text-pink-600 dark:text-pink-400">19</span>
+                <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Secs</span>
+              </div>
+            </div>
+
+            <!-- Featured Banner Thumbnail & Action -->
+            <div class="mt-6 flex items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-3">
+                <div class="flex -space-x-2">
+                  <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Speaker 1">
+                  <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Speaker 2">
+                  <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Speaker 3">
+                </div>
+                <span class="text-xs text-slate-600 dark:text-slate-400 font-medium">32 Renowned Keynotes</span>
+              </div>
+              <button onclick="openEventDetails(1)" class="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow hover:shadow-indigo-500/25">
+                Reserve Seat &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BROWSE & FILTER EVENTS SECTION ================= -->
+  <main id="events-section" class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <!-- Section Heading -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Upcoming Experiences</h2>
+        <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Explore sessions, masterclasses, and music gatherings handpicked for you.</p>
+      </div>
+
+      <!-- Quick Counter Tag -->
+      <div class="flex items-center gap-2 self-start md:self-auto">
+        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+          Showing <span id="eventCountLabel" class="font-bold text-indigo-600 dark:text-indigo-400">0</span> Events
+        </span>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls Bar -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm mb-8 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+        <!-- Live Search Input -->
+        <div class="relative md:col-span-8">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search by event title, venue, or keywords (e.g. AI, Music, Tech)..." 
+            class="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+          >
+          <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Sorting Filter -->
+        <div class="md:col-span-4 flex gap-2">
+          <div class="relative w-full">
+            <i class="fa-solid fa-arrow-down-wide-short absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <select id="sortSelect" class="w-full pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none font-medium cursor-pointer">
+              <option value="date-asc">Date: Soonest First</option>
+              <option value="popularity">Most Popular</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Filter Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 scrollbar-none" id="categoryFilters">
+        <button data-category="All" class="category-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
+          All Events
+        </button>
+        <button data-category="Tech & AI" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+          <i class="fa-solid fa-microchip mr-1.5 text-indigo-500"></i>Tech & AI
+        </button>
+        <button data-category="Music & Arts" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+          <i class="fa-solid fa-music mr-1.5 text-pink-500"></i>Music & Arts
+        </button>
+        <button data-category="Business & Startups" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+          <i class="fa-solid fa-chart-line mr-1.5 text-emerald-500"></i>Business & Startups
+        </button>
+        <button data-category="Gaming & Esports" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+          <i class="fa-solid fa-gamepad mr-1.5 text-purple-500"></i>Gaming & Esports
+        </button>
+        <button data-category="Workshops" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+          <i class="fa-solid fa-graduation-cap mr-1.5 text-amber-500"></i>Workshops
+        </button>
+      </div>
+    </div>
+
+    <!-- Event Cards Grid Container -->
+    <div id="eventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <!-- Dynamically injected via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="noEventsState" class="hidden text-center py-16 px-4 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 mt-6">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-500 text-2xl">
+        <i class="fa-regular fa-folder-open"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white">No Matching Events Found</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">Try clearing your search query or switching to another category.</p>
+      <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors">
+        Reset All Filters
+      </button>
+    </div>
+  </main>
+
+  <!-- ================= FEATURED KEYNOTE / TESTIMONIAL ================= -->
+  <section id="featured-speaker" class="border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-100/50 dark:bg-slate-900/40 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
+        <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-8 space-y-4">
+            <span class="inline-block text-xs font-bold uppercase tracking-widest text-pink-400">Host with EventSphere</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Are you an event creator or organizer?</h2>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+              From tech meetups to global multi-stage festivals, reach thousands of verified ticket seekers. Utilize seamless local badge scanning, analytics, and instant check-ins.
+            </p>
+            <div class="pt-2 flex flex-wrap gap-4">
+              <button onclick="showToast('Organizer Portal onboarding opens for Q1 2027!', 'info')" class="px-5 py-3 rounded-xl bg-white text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow">
+                Submit Event Proposal
+              </button>
+              <a href="#events-section" class="px-5 py-3 rounded-xl border border-white/20 hover:bg-white/10 text-white font-semibold text-xs sm:text-sm transition">
+                Explore Current Lineup
+              </a>
+            </div>
+          </div>
+          <div class="lg:col-span-4 flex justify-center">
+            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-5 text-center w-full max-w-xs">
+              <i class="fa-solid fa-shield-halved text-4xl text-emerald-400 mb-2"></i>
+              <h4 class="font-bold text-base">100% Guaranteed Passes</h4>
+              <p class="text-xs text-slate-300 mt-1">Tamper-proof digital tickets with instant local verification codes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ SECTION ================= -->
+  <section id="faq" class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Everything you need to know about booking and registering.</p>
+    </div>
+
+    <div class="space-y-4" id="faqAccordion">
+      <!-- FAQ 1 -->
+      <div class="border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 overflow-hidden">
+        <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition" onclick="toggleFaq(this)">
+          <span>How do I receive my registration ticket?</span>
+          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+        </button>
+        <div class="faq-content hidden px-5 pb-5 text-sm text-slate-600 dark:text-slate-400">
+          Upon submitting the registration form with valid contact information, your digital ticket pass is generated immediately with a unique Registration ID and QR pass. You can view, print, or review it anytime in the "My Tickets" tab stored directly on your browser.
+        </div>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 overflow-hidden">
+        <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition" onclick="toggleFaq(this)">
+          <span>Can I cancel or manage my booked events?</span>
+          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+        </button>
+        <div class="faq-content hidden px-5 pb-5 text-sm text-slate-600 dark:text-slate-400">
+          Yes! Open the "My Tickets" modal from the navigation bar. You can view all your active registrations and delete or cancel any pass at will with immediate localStorage updates.
+        </div>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 overflow-hidden">
+        <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition" onclick="toggleFaq(this)">
+          <span>Is payment required for all events?</span>
+          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+        </button>
+        <div class="faq-content hidden px-5 pb-5 text-sm text-slate-600 dark:text-slate-400">
+          Many community sessions and open-source webinars are completely Free of charge (labeled with the green Free badge). Premium summits will provide payment gateway settlement at the check-in desk or subsequent email invoice.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 py-10 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-sm font-bold">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <span class="font-bold text-slate-900 dark:text-white text-lg">EventSphere</span>
+        <span class="text-xs text-slate-400">| Designed for K Explore Web Designing Showcase</span>
+      </div>
+
+      <div class="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+        <a href="#events-section" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Events</a>
+        <a href="#faq" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Support</a>
+        <button onclick="showToast('Privacy Policy: All registration data is kept in client-side LocalStorage.', 'info')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+          Privacy Policy
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">&copy; 2026 EventSphere Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ================= MODAL: EVENT DETAILS ================= -->
+  <div id="detailsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto border border-slate-200 dark:border-slate-800 shadow-2xl animate-fade-in relative">
+      <!-- Close button -->
+      <button onclick="closeDetailsModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white flex items-center justify-center backdrop-blur-sm transition">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <!-- Banner Image -->
+      <div class="relative h-60 w-full overflow-hidden rounded-t-3xl bg-slate-800">
+        <img id="modalBanner" src="" alt="Event Banner" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-6 right-6">
+          <div class="flex items-center gap-2 mb-2">
+            <span id="modalCategory" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-600 text-white">Category</span>
+            <span id="modalPriceBadge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500 text-white">Free</span>
+          </div>
+          <h3 id="modalTitle" class="text-2xl font-bold text-white leading-tight">Event Title</h3>
+        </div>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div class="p-6 space-y-6">
+        <!-- Date / Venue Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-sm">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+              <i class="fa-regular fa-calendar-days text-base"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Date & Time</p>
+              <p id="modalDateTime" class="font-bold text-slate-800 dark:text-slate-200">Nov 18, 2026 • 10:00 AM</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-location-dot text-base"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Location</p>
+              <p id="modalLocation" class="font-bold text-slate-800 dark:text-slate-200">Convention Hall B</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-2">About This Event</h4>
+          <p id="modalDescription" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Detailed description will render here.
+          </p>
+        </div>
+
+        <!-- Keynote / Speakers -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-2">Featured Speaker / Host</h4>
+          <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+            <img id="modalSpeakerAvatar" class="w-12 h-12 rounded-xl object-cover" src="" alt="Speaker">
+            <div>
+              <p id="modalSpeakerName" class="font-bold text-sm text-slate-900 dark:text-white">Speaker Name</p>
+              <p id="modalSpeakerRole" class="text-xs text-slate-500 dark:text-slate-400">Speaker Designation</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remaining Seats Alert -->
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2">
+          <span><i class="fa-solid fa-ticket text-indigo-500 mr-1.5"></i>Seats Availability: <strong id="modalSeatsLeft" class="text-indigo-600 dark:text-indigo-400">24</strong> spots remaining</span>
+          <span class="text-emerald-500 font-semibold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Instant E-Pass</span>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <button onclick="closeDetailsModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            Close
+          </button>
+          <button id="modalRegisterCta" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/30 transition flex items-center gap-2">
+            <span>Register for this Event</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: REGISTRATION FORM ================= -->
+  <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm hidden overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl animate-fade-in relative my-6">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-id-badge text-indigo-500"></i> Event Registration
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Fill out your information to generate your verified entrance pass.</p>
+        </div>
+        <button onclick="closeRegisterModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Registration Form -->
+      <form id="registrationForm" novalidate class="p-6 space-y-4">
+        <!-- Event Selector -->
+        <div>
+          <label for="eventSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+            Select Event <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <select id="eventSelect" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none transition">
+              <!-- Dynamically populated -->
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+          </div>
+          <p id="eventSelectError" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+
+        <!-- Full Name -->
+        <div>
+          <label for="fullName" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+            Full Name <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="fullName" 
+              placeholder="e.g. Alex Henderson" 
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+              required
+            >
+          </div>
+          <p id="fullNameError" class="text-red-500 text-xs mt-1 hidden">Please provide your full legal name (at least 3 characters).</p>
+        </div>
+
+        <!-- Email Address -->
+        <div>
+          <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+            Email Address <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="alex@domain.com" 
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+              required
+            >
+          </div>
+          <p id="emailError" class="text-red-500 text-xs mt-1 hidden">Please enter a valid email address.</p>
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+          <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+            Phone Number <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input 
+              type="tel" 
+              id="phone" 
+              placeholder="e.g. 9876543210" 
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+              required
+            >
+          </div>
+          <p id="phoneError" class="text-red-500 text-xs mt-1 hidden">Please enter a valid 10-digit phone number.</p>
+        </div>
+
+        <!-- Row: Number of Tickets & Attendee Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="ticketsCount" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+              Tickets Quantity
+            </label>
+            <select id="ticketsCount" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="1">1 Ticket (Standard)</option>
+              <option value="2">2 Tickets (Duo)</option>
+              <option value="3">3 Tickets (Small Group)</option>
+              <option value="4">4 Tickets (Team)</option>
+            </select>
+          </div>
+          <div>
+            <label for="attendeeType" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+              Attendee Type
+            </label>
+            <select id="attendeeType" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="General Attendee">General Attendee</option>
+              <option value="Student / Scholar">Student / Scholar</option>
+              <option value="Corporate Professional">Corporate Professional</option>
+              <option value="Press / Media">Press / Media</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Terms Agreement -->
+        <div class="pt-2">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="termsCheck" required class="mt-1 rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950">
+            <span class="text-xs text-slate-600 dark:text-slate-400">
+              I agree to the code of conduct and consent to receiving pass confirmation details.
+            </span>
+          </label>
+          <p id="termsError" class="text-red-500 text-xs mt-1 hidden">You must agree before registering.</p>
+        </div>
+
+        <!-- Form Submit Actions -->
+        <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" onclick="closeRegisterModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            Cancel
+          </button>
+          <button type="submit" id="submitRegBtn" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/30 transition flex items-center gap-2">
+            <span id="submitBtnText">Confirm Registration</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: DIGITAL TICKET CONFIRMATION PASS ================= -->
+  <div id="ticketModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl animate-fade-in relative overflow-hidden my-6">
+      <!-- Decorative Header Ribbon -->
+      <div class="h-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+      
+      <div class="p-6 sm:p-8">
+        <!-- Success Icon -->
+        <div class="text-center space-y-2 mb-6">
+          <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-950/70 text-emerald-500 rounded-full mx-auto flex items-center justify-center text-2xl shadow-inner animate-bounce-subtle">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white">Registration Confirmed!</h3>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Here is your official digital event access pass.</p>
+        </div>
+
+        <!-- Visual Ticket Pass Card -->
+        <div id="printableTicket" class="rounded-2xl border-2 border-dashed border-indigo-300 dark:border-indigo-900/80 bg-slate-50 dark:bg-slate-950/70 p-5 space-y-4 relative">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">Official Pass</span>
+              <h4 id="passEventName" class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">Global AI Summit</h4>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-semibold text-slate-400">Ticket ID</span>
+              <p id="passRegId" class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400">#EVT-89472</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <span class="text-slate-400 text-[11px] block">Attendee Name</span>
+              <strong id="passUserName" class="text-slate-800 dark:text-slate-200 font-semibold text-sm">Alex Henderson</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px] block">Category & Count</span>
+              <strong id="passTypeAndCount" class="text-slate-800 dark:text-slate-200 font-semibold text-sm">General (1 Ticket)</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px] block">Date</span>
+              <span id="passDate" class="text-slate-700 dark:text-slate-300 font-medium">Nov 18, 2026</span>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px] block">Venue</span>
+              <span id="passVenue" class="text-slate-700 dark:text-slate-300 font-medium">Main Hall</span>
+            </div>
+          </div>
+
+          <!-- QR Code Barcode Representation -->
+          <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <!-- Visual Mock QR -->
+              <div class="w-14 h-14 bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-qrcode text-3xl text-slate-800 dark:text-slate-200"></i>
+              </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                <p class="font-semibold text-slate-800 dark:text-slate-200">Scan at Entrance</p>
+                <p>Present digital or printed slip</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+              VERIFIED
+            </span>
+          </div>
+        </div>
+
+        <!-- Ticket Actions -->
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 no-print">
+          <button onclick="printTicket()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2">
+            <i class="fa-solid fa-print"></i>
+            <span>Print Pass</span>
+          </button>
+          <div class="flex gap-2">
+            <button onclick="closeTicketModal()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow transition">
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: MY REGISTRATIONS (LOCAL STORAGE) ================= -->
+  <div id="myTicketsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm hidden overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl animate-fade-in relative max-h-[90vh] flex flex-col my-6">
+      
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-ticket text-indigo-500"></i> My Registered Passes
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Manage and review your saved tickets (stored in browser local storage).</p>
+        </div>
+        <button onclick="closeMyTicketsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Ticket List Container -->
+      <div id="ticketsListContainer" class="p-6 overflow-y-auto space-y-4 flex-1">
+        <!-- Dynamically injected via JavaScript -->
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40 rounded-b-3xl">
+        <span>Stored securely on this device</span>
+        <button onclick="closeMyTicketsModal()" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl transition">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full"></div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* =====================================================================
+     * 1. EVENT DATA MODEL
+     * =================================================================== */
+    const EVENTS_DATABASE = [
+      {
+        id: 1,
+        title: "Global AI & Cloud Conclave 2026",
+        category: "Tech & AI",
+        date: "2026-11-18",
+        time: "09:30 AM PST",
+        displayDate: "Nov 18, 2026",
+        venue: "Convention Center & Stream",
+        city: "San Francisco, CA",
+        price: "$49",
+        isFree: false,
+        seatsLeft: 14,
+        popularity: 98,
+        description: "Join international artificial intelligence researchers, LLM systems architects, and infrastructure pioneers to discuss next-generation frontier intelligence and enterprise safety.",
+        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Dr. Elena Vance",
+          role: "Chief Scientist @ NeuroFrontier AI",
+          avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+        }
+      },
+      {
+        id: 2,
+        title: "Indie Beats & Neon Arts Fest",
+        category: "Music & Arts",
+        date: "2026-11-22",
+        time: "06:00 PM EST",
+        displayDate: "Nov 22, 2026",
+        venue: "Skyline Pavilion Amphitheater",
+        city: "Austin, TX",
+        price: "Free",
+        isFree: true,
+        seatsLeft: 58,
+        popularity: 94,
+        description: "An immersive open-air evening celebrating indie synthwave performers, neon light installation art, visual DJs, and street food collectives.",
+        image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Marcus Aurel",
+          role: "Creative Director & Lead Producer",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+        }
+      },
+      {
+        id: 3,
+        title: "SaaS Founder Summit: Zero to $10M",
+        category: "Business & Startups",
+        date: "2026-11-28",
+        time: "10:00 AM CST",
+        displayDate: "Nov 28, 2026",
+        venue: "Metropolitan Financial Center",
+        city: "Chicago, IL",
+        price: "$89",
+        isFree: false,
+        seatsLeft: 22,
+        popularity: 88,
+        description: "Tactical sessions on customer acquisition cost, PLG funnel engineering, unit economics, and securing Series A/B funding during market shifts.",
+        image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Rachel Zhang",
+          role: "Partner at Horizon Venture Partners",
+          avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80"
+        }
+      },
+      {
+        id: 4,
+        title: "Valorant & Apex Legends Championship",
+        category: "Gaming & Esports",
+        date: "2026-12-05",
+        time: "01:00 PM PST",
+        displayDate: "Dec 05, 2026",
+        venue: "Omni Arena Coliseum",
+        city: "Los Angeles, CA",
+        price: "$25",
+        isFree: false,
+        seatsLeft: 8,
+        popularity: 96,
+        description: "16 pro teams face off across 3 days of double-elimination brackets. Live casters, cosplay competitions, and sponsor merchandise booths.",
+        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Dave 'Krypto' Collins",
+          role: "Lead Esports Broadcaster",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+        }
+      },
+      {
+        id: 5,
+        title: "Hands-on UI/UX Design System Workshop",
+        category: "Workshops",
+        date: "2026-12-10",
+        time: "11:00 AM EST",
+        displayDate: "Dec 10, 2026",
+        venue: "Interactive Virtual Lab & Discord",
+        city: "Online Global",
+        price: "Free",
+        isFree: true,
+        seatsLeft: 45,
+        popularity: 91,
+        description: "Build atomic design component libraries in Figma, configure token transformers, and bridge the handover gap to Tailwind CSS code seamlessly.",
+        image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Sarah Lindqvist",
+          role: "Principal Product Designer",
+          avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80"
+        }
+      },
+      {
+        id: 6,
+        title: "Fullstack TypeScript & Rust Hackday",
+        category: "Tech & AI",
+        date: "2026-12-14",
+        time: "08:30 AM EST",
+        displayDate: "Dec 14, 2026",
+        venue: "TechHub Innovation Commons",
+        city: "Seattle, WA",
+        price: "Free",
+        isFree: true,
+        seatsLeft: 30,
+        popularity: 89,
+        description: "Collaborative 12-hour building session focusing on high-performance web backends, WebAssembly compilation, and real-time distributed websockets.",
+        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80",
+        speaker: {
+          name: "Vikram Nathan",
+          role: "Staff Infrastructure Engineer",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+        }
+      }
+    ];
+
+    /* =====================================================================
+     * 2. STATE MANAGEMENT & STORAGE
+     * =================================================================== */
+    let currentCategory = "All";
+    let searchQuery = "";
+    let sortMode = "date-asc";
+    const STORAGE_KEY_REGISTRATIONS = "eventsphere_registrations_v1";
+    const STORAGE_KEY_THEME = "eventsphere_theme_pref";
+
+    /* =====================================================================
+     * 3. INITIALIZATION ON DOM READY
+     * =================================================================== */
+    window.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      populateEventSelectDropdown();
+      setupEventListeners();
+      startCountdownTimer();
+      renderEvents();
+      updateTicketBadges();
+    });
+
+    /* =====================================================================
+     * 4. THEME TOGGLE (DARK / LIGHT MODE BONUS)
+     * =================================================================== */
+    function initTheme() {
+      const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem(STORAGE_KEY_THEME, isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+      showToast(isDark ? "Switched to Dark Mode" : "Switched to Light Mode", "info");
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById("themeIcon");
+      if (!icon) return;
+      if (isDark) {
+        icon.className = "fa-solid fa-sun text-amber-400 text-base";
+      } else {
+        icon.className = "fa-solid fa-moon text-indigo-600 text-base";
+      }
+    }
+
+    /* =====================================================================
+     * 5. COUNTDOWN TIMER BONUS
+     * =================================================================== */
+    function startCountdownTimer() {
+      // Target flagship event: Nov 18, 2026 09:30 AM
+      const targetDate = new Date("November 18, 2026 09:30:00").getTime();
+
+      function updateClock() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference <= 0) {
+          document.getElementById("timerDays").textContent = "00";
+          document.getElementById("timerHours").textContent = "00";
+          document.getElementById("timerMinutes").textContent = "00";
+          document.getElementById("timerSeconds").textContent = "00";
+          return;
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById("timerDays").textContent = days < 10 ? '0' + days : days;
+        document.getElementById("timerHours").textContent = hours < 10 ? '0' + hours : hours;
+        document.getElementById("timerMinutes").textContent = minutes < 10 ? '0' + minutes : minutes;
+        document.getElementById("timerSeconds").textContent = seconds < 10 ? '0' + seconds : seconds;
+      }
+
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    /* =====================================================================
+     * 6. EVENT FILTERING, SEARCH & RENDERING
+     * =================================================================== */
+    function renderEvents() {
+      const grid = document.getElementById("eventsGrid");
+      const emptyState = document.getElementById("noEventsState");
+      const countLabel = document.getElementById("eventCountLabel");
+
+      let filtered = EVENTS_DATABASE.filter(ev => {
+        const matchCategory = (currentCategory === "All" || ev.category === currentCategory);
+        const q = searchQuery.toLowerCase().trim();
+        const matchSearch = !q || 
+          ev.title.toLowerCase().includes(q) || 
+          ev.venue.toLowerCase().includes(q) || 
+          ev.city.toLowerCase().includes(q) || 
+          ev.description.toLowerCase().includes(q);
+        return matchCategory && matchSearch;
+      });
+
+      // Sorting
+      if (sortMode === "date-asc") {
+        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      } else if (sortMode === "popularity") {
+        filtered.sort((a, b) => b.popularity - a.popularity);
+      } else if (sortMode === "price-asc") {
+        filtered.sort((a, b) => {
+          const pA = a.isFree ? 0 : parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const pB = b.isFree ? 0 : parseFloat(b.price.replace(/[^0-9.]/g, ''));
+          return pA - pB;
+        });
+      } else if (sortMode === "price-desc") {
+        filtered.sort((a, b) => {
+          const pA = a.isFree ? 0 : parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const pB = b.isFree ? 0 : parseFloat(b.price.replace(/[^0-9.]/g, ''));
+          return pB - pA;
+        });
+      }
+
+      countLabel.textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        emptyState.classList.add("hidden");
+      }
+
+      grid.innerHTML = filtered.map(ev => {
+        const priceBadge = ev.isFree 
+          ? `<span class="bg-emerald-500/90 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-md">Free</span>`
+          : `<span class="bg-indigo-600/90 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-md">${ev.price}</span>`;
+
+        return `
+          <div class="group bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-800/80 transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <!-- Card Image & Header Badges -->
+              <div class="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                <img 
+                  src="${ev.image}" 
+                  alt="${ev.title}" 
+                  loading="lazy"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                <div class="absolute top-3 left-3">
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 backdrop-blur-md shadow-sm">
+                    ${ev.category}
+                  </span>
+                </div>
+                <div class="absolute top-3 right-3">
+                  ${priceBadge}
+                </div>
+                <div class="absolute bottom-3 left-3 text-white text-xs flex items-center gap-1.5 font-medium">
+                  <i class="fa-solid fa-location-dot text-pink-400"></i>
+                  <span>${ev.city}</span>
+                </div>
+              </div>
+
+              <!-- Card Content -->
+              <div class="p-5 space-y-3">
+                <div class="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 font-semibold">
+                  <i class="fa-regular fa-calendar"></i>
+                  <span>${ev.displayDate} • ${ev.time}</span>
+                </div>
+
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  ${ev.title}
+                </h3>
+
+                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                  ${ev.description}
+                </p>
+
+                <!-- Seats status indicator -->
+                <div class="flex items-center justify-between text-xs pt-1 text-slate-500 dark:text-slate-400">
+                  <span class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full ${ev.seatsLeft < 10 ? 'bg-amber-500 animate-ping' : 'bg-emerald-500'}"></span>
+                    ${ev.seatsLeft} tickets left
+                  </span>
+                  <span class="text-[11px] text-slate-400">${ev.venue}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Bottom Buttons -->
+            <div class="px-5 pb-5 pt-2 flex items-center gap-2.5 border-t border-slate-100 dark:border-slate-800/80 mt-2">
+              <button onclick="openEventDetails(${ev.id})" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                View Details
+              </button>
+              <button onclick="openRegisterModal(${ev.id})" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-ticket-simple text-[10px]"></i>
+                <span>Register</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* =====================================================================
+     * 7. EVENT LISTENERS
+     * =================================================================== */
+    function setupEventListeners() {
+      // Theme Button
+      document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+
+      // Search Input
+      const searchInput = document.getElementById("searchInput");
+      const clearBtn = document.getElementById("clearSearchBtn");
+
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        clearBtn.classList.toggle("hidden", searchQuery.length === 0);
+        renderEvents();
+      });
+
+      clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        searchQuery = "";
+        clearBtn.classList.add("hidden");
+        renderEvents();
+      });
+
+      // Sort Select
+      document.getElementById("sortSelect").addEventListener("change", (e) => {
+        sortMode = e.target.value;
+        renderEvents();
+      });
+
+      // Category Pill Buttons
+      const catButtons = document.querySelectorAll(".category-btn");
+      catButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          catButtons.forEach(b => {
+            b.classList.remove("active", "bg-indigo-600", "text-white", "shadow-sm", "shadow-indigo-600/30");
+            b.classList.add("bg-slate-100", "dark:bg-slate-800", "text-slate-600", "dark:text-slate-300");
+          });
+          btn.classList.add("active", "bg-indigo-600", "text-white", "shadow-sm", "shadow-indigo-600/30");
+          btn.classList.remove("bg-slate-100", "dark:bg-slate-800", "text-slate-600", "dark:text-slate-300");
+
+          currentCategory = btn.getAttribute("data-category");
+          renderEvents();
+        });
+      });
+
+      // Mobile Menu
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const mobileMenuIcon = document.getElementById("mobileMenuIcon");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        const isClosed = mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden", !isClosed);
+        mobileMenuIcon.className = isClosed ? "fa-solid fa-xmark text-lg" : "fa-solid fa-bars text-lg";
+      });
+
+      document.querySelectorAll(".mobile-nav-link").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          mobileMenuIcon.className = "fa-solid fa-bars text-lg";
+        });
+      });
+
+      // My Tickets Buttons
+      document.getElementById("myTicketsBtn").addEventListener("click", openMyTicketsModal);
+      document.getElementById("mobileMyTicketsBtn").addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+        mobileMenuIcon.className = "fa-solid fa-bars text-lg";
+        openMyTicketsModal();
+      });
+
+      // Registration Form Submission with Validations
+      document.getElementById("registrationForm").addEventListener("submit", handleRegistrationSubmit);
+
+      // Keyboard Esc to close open modals
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeDetailsModal();
+          closeRegisterModal();
+          closeTicketModal();
+          closeMyTicketsModal();
+        }
+      });
+    }
+
+    function resetFilters() {
+      searchQuery = "";
+      currentCategory = "All";
+      document.getElementById("searchInput").value = "";
+      document.getElementById("clearSearchBtn").classList.add("hidden");
+      
+      const catButtons = document.querySelectorAll(".category-btn");
+      catButtons.forEach(btn => {
+        const isAll = btn.getAttribute("data-category") === "All";
+        btn.classList.toggle("active", isAll);
+        btn.classList.toggle("bg-indigo-600", isAll);
+        btn.classList.toggle("text-white", isAll);
+        btn.classList.toggle("bg-slate-100", !isAll);
+        btn.classList.toggle("dark:bg-slate-800", !isAll);
+        btn.classList.toggle("text-slate-600", !isAll);
+      });
+
+      renderEvents();
+    }
+
+    function toggleFaq(btn) {
+      const content = btn.nextElementSibling;
+      const chevron = btn.querySelector(".fa-chevron-down");
+      const isHidden = content.classList.contains("hidden");
+
+      document.querySelectorAll(".faq-content").forEach(c => c.classList.add("hidden"));
+      document.querySelectorAll("#faqAccordion .fa-chevron-down").forEach(i => i.style.transform = "rotate(0deg)");
+
+      if (isHidden) {
+        content.classList.remove("hidden");
+        chevron.style.transform = "rotate(180deg)";
+      }
+    }
+
+    /* =====================================================================
+     * 8. POPULATE DROPDOWNS & DETAILS MODAL
+     * =================================================================== */
+    function populateEventSelectDropdown() {
+      const select = document.getElementById("eventSelect");
+      select.innerHTML = '<option value="" disabled selected>-- Choose an Event --</option>' + 
+        EVENTS_DATABASE.map(e => `
+          <option value="${e.id}">${e.title} (${e.displayDate} - ${e.price})</option>
+        `).join('');
+    }
+
+    function openEventDetails(eventId) {
+      const ev = EVENTS_DATABASE.find(item => item.id === eventId);
+      if (!ev) return;
+
+      document.getElementById("modalBanner").src = ev.image;
+      document.getElementById("modalCategory").textContent = ev.category;
+      document.getElementById("modalPriceBadge").textContent = ev.price;
+      document.getElementById("modalPriceBadge").className = ev.isFree 
+        ? "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500 text-white" 
+        : "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-600 text-white";
+      
+      document.getElementById("modalTitle").textContent = ev.title;
+      document.getElementById("modalDateTime").textContent = `${ev.displayDate} • ${ev.time}`;
+      document.getElementById("modalLocation").textContent = `${ev.venue}, ${ev.city}`;
+      document.getElementById("modalDescription").textContent = ev.description;
+      document.getElementById("modalSeatsLeft").textContent = ev.seatsLeft;
+
+      // Speaker
+      document.getElementById("modalSpeakerAvatar").src = ev.speaker.avatar;
+      document.getElementById("modalSpeakerName").textContent = ev.speaker.name;
+      document.getElementById("modalSpeakerRole").textContent = ev.speaker.role;
+
+      // Modal CTA
+      const ctaBtn = document.getElementById("modalRegisterCta");
+      ctaBtn.onclick = () => {
+        closeDetailsModal();
+        openRegisterModal(ev.id);
+      };
+
+      document.getElementById("detailsModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDetailsModal() {
+      document.getElementById("detailsModal").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    /* =====================================================================
+     * 9. REGISTRATION MODAL & FORM VALIDATION
+     * =================================================================== */
+    function openRegisterModal(preselectedEventId = null) {
+      const select = document.getElementById("eventSelect");
+      if (preselectedEventId) {
+        select.value = preselectedEventId;
+      }
+      clearValidationErrors();
+      document.getElementById("registerModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeRegisterModal() {
+      document.getElementById("registerModal").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function clearValidationErrors() {
+      document.getElementById("fullNameError").classList.add("hidden");
+      document.getElementById("emailError").classList.add("hidden");
+      document.getElementById("phoneError").classList.add("hidden");
+      document.getElementById("eventSelectError").classList.add("hidden");
+      document.getElementById("termsError").classList.add("hidden");
+    }
+
+    function handleRegistrationSubmit(e) {
+      e.preventDefault();
+      clearValidationErrors();
+
+      const eventSelect = document.getElementById("eventSelect");
+      const fullName = document.getElementById("fullName");
+      const email = document.getElementById("email");
+      const phone = document.getElementById("phone");
+      const ticketsCount = document.getElementById("ticketsCount");
+      const attendeeType = document.getElementById("attendeeType");
+      const termsCheck = document.getElementById("termsCheck");
+
+      let isValid = true;
+
+      // Event Check
+      if (!eventSelect.value) {
+        document.getElementById("eventSelectError").textContent = "Please choose an event to attend.";
+        document.getElementById("eventSelectError").classList.remove("hidden");
+        isValid = false;
+      }
+
+      // Name Check (at least 3 characters)
+      if (!fullName.value || fullName.value.trim().length < 3) {
+        document.getElementById("fullNameError").classList.remove("hidden");
+        isValid = false;
+      }
+
+      // Email Check (standard regex)
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.value || !emailPattern.test(email.value.trim())) {
+        document.getElementById("emailError").classList.remove("hidden");
+        isValid = false;
+      }
+
+      // Phone Check (valid 10 digits or international formatted numbers with min 10 digits)
+      const phoneClean = phone.value.replace(/[^0-9]/g, '');
+      if (phoneClean.length < 10) {
+        document.getElementById("phoneError").classList.remove("hidden");
+        isValid = false;
+      }
+
+      // Terms Check
+      if (!termsCheck.checked) {
+        document.getElementById("termsError").classList.remove("hidden");
+        isValid = false;
+      }
+
+      if (!isValid) {
+        return;
+      }
+
+      // If valid, generate registration object & ID
+      const chosenEvent = EVENTS_DATABASE.find(ev => ev.id === parseInt(eventSelect.value));
+      const registrationId = 'ESP-' + Math.floor(100000 + Math.random() * 900000);
+
+      const registrationRecord = {
+        regId: registrationId,
+        eventId: chosenEvent ? chosenEvent.id : 0,
+        eventName: chosenEvent ? chosenEvent.title : "Event Pass",
+        eventDate: chosenEvent ? chosenEvent.displayDate : "TBA",
+        eventVenue: chosenEvent ? `${chosenEvent.venue}, ${chosenEvent.city}` : "Main Arena",
+        userName: fullName.value.trim(),
+        userEmail: email.value.trim(),
+        userPhone: phone.value.trim(),
+        ticketsCount: ticketsCount.value,
+        attendeeType: attendeeType.value,
+        registeredAt: new Date().toISOString()
+      };
+
+      // Save to LocalStorage (Bonus Feature)
+      saveRegistrationToStorage(registrationRecord);
+
+      // Decrement visible seats
+      if (chosenEvent && chosenEvent.seatsLeft > 0) {
+        chosenEvent.seatsLeft = Math.max(0, chosenEvent.seatsLeft - parseInt(ticketsCount.value));
+        renderEvents();
+      }
+
+      // Reset and close register modal
+      document.getElementById("registrationForm").reset();
+      closeRegisterModal();
+
+      // Show ticket pass modal
+      showTicketConfirmation(registrationRecord);
+      showToast("Registration completed successfully!", "success");
+    }
+
+    /* =====================================================================
+     * 10. DIGITAL TICKET PASS GENERATION & PRINT
+     * =================================================================== */
+    function showTicketConfirmation(record) {
+      document.getElementById("passEventName").textContent = record.eventName;
+      document.getElementById("passRegId").textContent = "#" + record.regId;
+      document.getElementById("passUserName").textContent = record.userName;
+      document.getElementById("passTypeAndCount").textContent = `${record.attendeeType} (${record.ticketsCount} Ticket${record.ticketsCount > 1 ? 's' : ''})`;
+      document.getElementById("passDate").textContent = record.eventDate;
+      document.getElementById("passVenue").textContent = record.eventVenue;
+
+      document.getElementById("ticketModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeTicketModal() {
+      document.getElementById("ticketModal").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function printTicket() {
+      window.print();
+    }
+
+    /* =====================================================================
+     * 11. LOCAL STORAGE REGISTRATIONS MANAGEMENT
+     * =================================================================== */
+    function getStoredRegistrations() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY_REGISTRATIONS);
+        return stored ? JSON.parse(stored) : [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveRegistrationToStorage(record) {
+      const records = getStoredRegistrations();
+      records.unshift(record);
+      localStorage.setItem(STORAGE_KEY_REGISTRATIONS, JSON.stringify(records));
+      updateTicketBadges();
+    }
+
+    function deleteRegistration(regId) {
+      let records = getStoredRegistrations();
+      records = records.filter(item => item.regId !== regId);
+      localStorage.setItem(STORAGE_KEY_REGISTRATIONS, JSON.stringify(records));
+      updateTicketBadges();
+      renderStoredTicketsList();
+      showToast("Pass removed from your tickets", "info");
+    }
+
+    function updateTicketBadges() {
+      const records = getStoredRegistrations();
+      const desktopBadge = document.getElementById("ticketCountBadge");
+      const mobileBadge = document.getElementById("mobileTicketBadge");
+
+      if (records.length > 0) {
+        desktopBadge.textContent = records.length;
+        desktopBadge.classList.remove("hidden");
+        mobileBadge.textContent = records.length;
+        mobileBadge.classList.remove("hidden");
+      } else {
+        desktopBadge.classList.add("hidden");
+        mobileBadge.classList.add("hidden");
+      }
+    }
+
+    function openMyTicketsModal() {
+      renderStoredTicketsList();
+      document.getElementById("myTicketsModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeMyTicketsModal() {
+      document.getElementById("myTicketsModal").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function renderStoredTicketsList() {
+      const container = document.getElementById("ticketsListContainer");
+      const records = getStoredRegistrations();
+
+      if (records.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+              <i class="fa-solid fa-ticket text-xl"></i>
+            </div>
+            <h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm">No Active Registrations</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">You haven't reserved tickets for any events yet.</p>
+            <button onclick="closeMyTicketsModal(); window.location.hash='#events-section';" class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold">
+              Browse Events Now
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = records.map(item => `
+        <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400">#${item.regId}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-bold">Confirmed</span>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white text-base">${item.eventName}</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              <i class="fa-regular fa-calendar mr-1"></i>${item.eventDate} • <i class="fa-solid fa-location-dot mx-1"></i>${item.eventVenue}
+            </p>
+            <p class="text-xs text-slate-600 dark:text-slate-300">
+              Attendee: <strong>${item.userName}</strong> (${item.ticketsCount} ${item.attendeeType})
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <button onclick='viewSpecificTicket(${JSON.stringify(item).replace(/'/g, "&apos;")})' class="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold hover:bg-indigo-100 transition">
+              View Slip
+            </button>
+            <button onclick="deleteRegistration('${item.regId}')" class="px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-900/60 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 text-xs font-semibold transition" title="Cancel Reservation">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewSpecificTicket(record) {
+      closeMyTicketsModal();
+      showTicketConfirmation(record);
+    }
+
+    /* =====================================================================
+     * 12. TOAST NOTIFICATIONS UTILITY
+     * =================================================================== */
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+
+      const toast = document.createElement("div");
+      toast.className = `pointer-events-auto flex items-center gap-3 p-4 rounded-2xl shadow-xl border text-sm animate-fade-in transition-all duration-300 ${
+        type === "success" 
+          ? "bg-emerald-900/90 border-emerald-500 text-white backdrop-blur-md" 
+          : "bg-slate-900/95 border-slate-700 text-white backdrop-blur-md"
+      }`;
+
+      const iconClass = type === "success" ? "fa-solid fa-circle-check text-emerald-400" : "fa-solid fa-circle-info text-indigo-400";
+
+      toast.innerHTML = `
+        <i class="${iconClass} text-base"></i>
+        <span class="flex-1 text-xs sm:text-sm font-medium">${message}</span>
+        <button class="text-slate-400 hover:text-white" onclick="this.parentElement.remove()">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      `;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
